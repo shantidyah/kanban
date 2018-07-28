@@ -1,6 +1,10 @@
 <template>
   <div class="addButton">
-    <div id="modal1" class="modal" style="display:block; position:absolute">
+    <!-- {{seenmodal}} -->
+    <div v-if="seenmodal">
+      <a class="waves-effect waves-light btn modal-trigger" href="#modal1" @click="seenmodal=false">Add Task</a>
+    </div>
+    <div id="modal1" class="modal" style="display:block; position:absolute" v-else>
       <div class="modal-content">
       <h4>Modal Header</h4>
       task:

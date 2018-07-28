@@ -18,7 +18,7 @@
       </div>
       <div class="modal-footer">
       <a href="#!" class="modal-close waves-effect waves-green btn-flat" @click="seenmodal=true">Cancel</a>
-      <a href="#!" class="modal-close waves-effect waves-green btn-flat" @click="addTask">Save</a>
+      <a class="modal-close waves-effect waves-green btn-flat" @click="addTask">Save</a>
       </div>
     </div>
   </div>
@@ -51,21 +51,37 @@ export default {
   },
   methods: {
     addTask: function () {
-      var database = firebase.database()
-      var postsRef = database.ref('kanban')
-      // Generate a reference to a new location and add some data using push()
-      var newPostRef = postsRef.push({
-        task: this.task,
-        description: this.description,
-        point: this.point,
-        assign: this.assign,
-        status: 'backlog'
+      swal({
+        title: "Are you sure save this task?",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
       })
-      this.seenmodal = true
-      this.task = ''
-      this.description = ''
-      this.assign = ''
-      this.point = ''
+      .then((willSave) => {
+        if (willSave) {
+          var database = firebase.database()
+          var postsRef = database.ref('kanban')
+          var newPostRef = postsRef.push({
+            task: this.task,
+            description: this.description,
+            point: this.point,
+            assign: this.assign,
+            status: 'backlog'
+          })
+          this.seenmodal = true
+          this.task = ''
+          this.description = ''
+          this.assign = ''
+          this.point = ''
+          this.$router.push('/')
+          swal("Your task has been saved!", {
+            icon: "success",
+          });
+        }else{
+            swal("cancled")
+        }
+      });
+
     }
   }
 }

@@ -1,30 +1,29 @@
 <template>
     <div class="show">
       <!-- {{backlog}} -->
-      {{seenCard}}
+      <!-- {{seenCard}} -->
       <div class="row">
         <div class="col s3 m3" id="backlog">
-            <ul class="collapsible" style="padding-right: 5px"  @click="collapsible">
+            <ul class="collapsible" style="padding-right: 5px"  @click="seenCard=false">
               <li>
                 <div class="collapsible-header"><i class="material-icons">event_note</i>BACKLOG</div>
                 <div v-if="seenCard"></div>
                 <div class="collapsible-body" style="display:block" v-else>
                   <span>
-                    <div class="row" v-for="task in backlog">
+                    <div class="row" v-for="task in backlog" v-bind:key="task[key]">
                       <div class="col s12 m12">
-                        <div class="card">
+                        <div class="card" style="position:static;">
                           <div class="card-content">
-                            <h4>{{task.task}}</h4><br>
-                            <div class='content-task' style="text-align:left">
-                              <h6>description: {{task.description}}</h6>
-                              <h6>point: {{task.point}}</h6>
-                              <h6>assign to: {{task.assign}}</h6>
-                              <h6>status: {{task.status}}</h6>
+                            <p class='headerCard'>{{task.task}}</p><br>
+                            <div class='content-task' style="text-align:left; line-height: 2em;">
+                              <p><b>Description: </b>{{task.description}}</p>
+                              <p><b>Point: </b>{{task.point}}</p>
+                              <p><b>Assign to: </b>{{task.assign}}</p>
                             </div>
                           </div>
-                          <div class="card-action">
+                          <div class="card-action" style="position:static;">
                             <!-- <button><i class="material-icons">arrow_back</i></button> -->
-                            <button><i class="material-icons">create</i></button>
+                            <button @click="deleteTask(task.id,task.task)"><i class="material-icons">delete</i></button>
                             <button @click="changeTodo(task.id)"><i class="material-icons">arrow_forward</i></button>
                           </div>
                         </div>
@@ -37,27 +36,26 @@
         </div>
 
         <div class="col s3 m3" id="todo">
-          <ul class="collapsible" style="padding-right: 5px"  @click="collapsible">
+          <ul class="collapsible" style="padding-right: 5px"  @click="seenCard=false">
             <li>
               <div class="collapsible-header"><i class="material-icons">event_note</i>TODO</div>
               <div v-if="seenCard"></div>
-              <div class="collapsible-body" style="display:block" v-else>
+              <div class="collapsible-body" style="display:block;" v-else>
                 <span>
-                  <div class="row" v-for="task in todo">
+                  <div class="row" v-for="task in todo" v-bind:key="task[key]">
                     <div class="col s12 m12">
-                      <div class="card">
+                      <div class="card" style="position:static;">
                         <div class="card-content">
-                          <h4>{{task.task}}</h4><br>
-                          <div class='content-task' style="text-align:left">
-                            <h6>description: {{task.description}}</h6>
-                            <h6>point: {{task.point}}</h6>
-                            <h6>assign to: {{task.assign}}</h6>
-                            <h6>status: {{task.status}}</h6>
+                          <p class='headerCard'>{{task.task}}</p><br>
+                          <div class='content-task' style="text-align:left; line-height: 2em;">
+                            <p><b>Description: </b>{{task.description}}</p>
+                            <p><b>Point: </b>{{task.point}}</p>
+                            <p><b>Assign to: </b>{{task.assign}}</p>
                           </div>
                         </div>
-                        <div class="card-action">
+                        <div class="card-action" style="position:static;">
                           <button @click="changeBacklog(task.id)"><i class="material-icons">arrow_back</i></button>
-                          <button><i class="material-icons">create</i></button>
+                          <button @click="deleteTask(task.id,task.task)"><i class="material-icons">delete</i></button>
                           <button @click="changeDoing(task.id)"><i class="material-icons">arrow_forward</i></button>
                         </div>
                       </div>
@@ -70,27 +68,26 @@
         </div>
 
         <div class="col s3 m3" id="doing">
-          <ul class="collapsible" style="padding-right: 5px"  @click="collapsible">
+          <ul class="collapsible" style="padding-right: 5px"  @click="seenCard=false">
             <li>
               <div class="collapsible-header"><i class="material-icons">event_note</i>DOING</div>
               <div v-if="seenCard"></div>
               <div class="collapsible-body" style="display:block" v-else>
                 <span>
-                  <div class="row" v-for="task in doing">
+                  <div class="row" v-for="task in doing" v-bind:key="task[key]">
                     <div class="col s12 m12">
-                      <div class="card">
+                      <div class="card" style="position:static;">
                         <div class="card-content">
-                          <h4>{{task.task}}</h4><br>
-                          <div class='content-task' style="text-align:left">
-                            <h6>description: {{task.description}}</h6>
-                            <h6>point: {{task.point}}</h6>
-                            <h6>assign to: {{task.assign}}</h6>
-                            <h6>status: {{task.status}}</h6>
+                          <p class='headerCard'>{{task.task}}</p><br>
+                          <div class='content-task' style="text-align:left; line-height: 2em;">
+                            <p><b>Description: </b>{{task.description}}</p>
+                            <p><b>Point: </b>{{task.point}}</p>
+                            <p><b>Assign to: </b>{{task.assign}}</p>
                           </div>
                         </div>
-                        <div class="card-action">
+                        <div class="card-action" style="position:static;">
                           <button @click="changeTodo(task.id)"><i class="material-icons">arrow_back</i></button>
-                          <button><i class="material-icons">create</i></button>
+                          <button @click="deleteTask(task.id,task.task)"><i class="material-icons">delete</i></button>
                           <button @click="changeDone(task.id)"><i class="material-icons">arrow_forward</i></button>
                         </div>
                       </div>
@@ -103,27 +100,26 @@
         </div>
 
         <div class="col s3 m3" id="done">
-          <ul class="collapsible" style="padding-right: 5px" @click="collapsible">
+          <ul class="collapsible" style="padding-right: 5px" @click="seenCard=false">
             <li>
               <div class="collapsible-header"><i class="material-icons">event_available</i>DONE</div>
               <div v-if="seenCard"> </div>
               <div class="collapsible-body" style="display:block" v-else>
                 <span>
-                  <div class="row" v-for="task in done">
+                  <div class="row" v-for="task in done" v-bind:key="task[key]">
                     <div class="col s12 m12">
-                      <div class="card">
+                      <div class="card" style="position:static;">
                         <div class="card-content">
-                          <h4>{{task.task}}</h4><br>
-                          <div class='content-task' style="text-align:left">
-                            <h6>description: {{task.description}}</h6>
-                            <h6>point: {{task.point}}</h6>
-                            <h6>assign to: {{task.assign}}</h6>
-                            <h6>status: {{task.status}}</h6>
+                          <p class='headerCard'>{{task.task}}</p><br>
+                          <div class='content-task' style="text-align:left; line-height: 2em;">
+                            <p><b>Description: </b>{{task.description}}</p>
+                            <p><b>Point: </b>{{task.point}}</p>
+                            <p><b>Assign to: </b>{{task.assign}}</p>
                           </div>
                         </div>
-                        <div class="card-action">
+                        <div class="card-action" style="position:static;">
                           <button @click="changeDoing(task.id)"><i class="material-icons">arrow_back</i></button>
-                          <button><i class="material-icons">create</i></button>
+                          <button @click="deleteTask(task.id,task.task)"><i class="material-icons">delete</i></button>
                         </div>
                       </div>
                     </div>
@@ -134,23 +130,22 @@
           </ul>
         </div>
       </div>
-      <!-- <div v-if='seenedit'></div>
-      <div v-else> -->
-        <Edit/>
-      <!-- </div> -->
     </div>
 </template>
 
+<style>
+  .headerCard{
+    text-transform: uppercase;
+    font-size: 25px;
+    font-weight: bold;
+  }
+</style>
+
 <script>
 import firebase from 'firebase'
-import Edit from '@/components/EditKanban.vue'
 
 export default {
   name: 'show',
-  // components: ('child',{
-  //   props: [this.task],
-  //   template: 
-  // }),
   data () {
     return {
       kanban: '',
@@ -159,8 +154,7 @@ export default {
       doing: [],
       done: [],
       seenCard: true,
-      task:'',
-      seenedit:true
+      task: ''
     }
   },
   created () {
@@ -227,8 +221,30 @@ export default {
         this.seenCard = true
       }
     },
-    editTask : function (task) {
-
+    deleteTask: function (id, task) {
+      // var db = firebase.database()
+      swal('Successfully Delete', task, 'success')
+      swal({
+        title: 'Are you sure?',
+        text: 'Once deleted, you will not be able to recover this task!',
+        icon: 'warning',
+        buttons: true,
+        dangerMode: true
+      })
+        .then((willDelete) => {
+          if (willDelete) {
+            var database = firebase.database()
+            var postsRef = database.ref('kanban')
+            var usersRef = postsRef.child(id)
+            usersRef.set({})
+            this.showData()
+            swal('Poof! Your task has been deleted!', {
+              icon: 'success'
+            })
+          } else {
+            swal('Your task is safe!')
+          }
+        })
     }
   }
 }
