@@ -6,7 +6,7 @@
     </div>
     <div id="modal1" class="modal" style="display:block; position:absolute" v-else>
       <div class="modal-content">
-      <h4>Modal Header</h4>
+      <h4>Add Task</h4>
       task:
       <input type="text" v-model='task' id="task">
       description:
@@ -18,7 +18,7 @@
       </div>
       <div class="modal-footer">
       <a href="#!" class="modal-close waves-effect waves-green btn-flat" @click="seenmodal=true">Cancel</a>
-      <a class="modal-close waves-effect waves-green btn-flat" @click="addTask">Save</a>
+      <router-link to="/"><a class="modal-close waves-effect waves-green btn-flat" @click="addTask">Save</a></router-link>
       </div>
     </div>
   </div>
@@ -26,6 +26,7 @@
 
 <script>
 import firebase from 'firebase'
+import { mapActions } from 'vuex'
 
 export default {
   name: 'addButton',
@@ -50,38 +51,25 @@ export default {
     firebase.initializeApp(config)
   },
   methods: {
+    ...mapActions([
+      'listTask'
+    ]),
     addTask: function () {
-      swal({
-        title: "Are you sure save this task?",
-        icon: "warning",
-        buttons: true,
-        dangerMode: true,
+      var database = firebase.database()
+      var postsRef = database.ref('kanban')
+      postsRef.push({
+        task: this.task,
+        description: this.description,
+        point: this.point,
+        assign: this.assign,
+        status: 'backlog'
       })
-      .then((willSave) => {
-        if (willSave) {
-          var database = firebase.database()
-          var postsRef = database.ref('kanban')
-          var newPostRef = postsRef.push({
-            task: this.task,
-            description: this.description,
-            point: this.point,
-            assign: this.assign,
-            status: 'backlog'
-          })
-          this.seenmodal = true
-          this.task = ''
-          this.description = ''
-          this.assign = ''
-          this.point = ''
-          this.$router.push('/')
-          swal("Your task has been saved!", {
-            icon: "success",
-          });
-        }else{
-            swal("cancled")
-        }
-      });
-
+      this.seenmodal = true
+      this.task = ''
+      this.description = ''
+      this.assign = ''
+      this.point = ''
+      this.listTask()
     }
   }
 }

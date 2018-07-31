@@ -1,6 +1,6 @@
 <template>
     <div class="show">
-      <!-- {{backlog}} -->
+      <!-- {{todo}} -->
       <!-- {{seenCard}} -->
       <div class="row">
         <div class="col s3 m3" id="backlog">
@@ -143,76 +143,59 @@
 
 <script>
 import firebase from 'firebase'
+import { mapState, mapActions } from 'vuex'
 
 export default {
   name: 'show',
   data () {
     return {
       kanban: '',
-      backlog: [],
-      todo: [],
-      doing: [],
-      done: [],
       seenCard: true,
       task: ''
     }
   },
   created () {
-    this.showData()
+    this.listTask()
+  },
+  computed: {
+    ...mapState({
+      backlog: 'backlog',
+      todo: 'todo',
+      doing: 'doing',
+      done: 'done'
+    })
   },
   methods: {
-    showData: function () {
-      // this.seenCard = false
-      this.backlog = []
-      this.todo = []
-      this.doing = []
-      this.done = []
-      var ref = firebase.database().ref('kanban')
-      const self = this
-      ref.on('value', function (snapshot) {
-        var result = snapshot.val()
-        console.log(typeof result)
-        for (var key in result) {
-          result[key].id = key
-          if (result[key].status === 'backlog') {
-            self.backlog.push(result[key])
-          } else if (result[key].status === 'todo') {
-            self.todo.push(result[key])
-          } else if (result[key].status === 'doing') {
-            self.doing.push(result[key])
-          } else if (result[key].status === 'done') {
-            self.done.push(result[key])
-          }
-        }
-      })
-    },
+    ...mapActions([
+      'listTask'
+    ]),
     changeBacklog: function (id) {
       console.log(id)
       var db = firebase.database()
       db.ref('kanban/' + id + '/status').set('backlog')
       // this.seenCard = false
-      this.showData()
+      this.listTask()
     },
     changeTodo: function (id) {
       console.log(id)
       var db = firebase.database()
       db.ref('kanban/' + id + '/status').set('todo')
       // this.seenCard = false
-      this.showData()
+      this.listTask()
     },
     changeDoing: function (id) {
       console.log(id)
       var db = firebase.database()
       db.ref('kanban/' + id + '/status').set('doing')
       // this.seenCard = false
-      this.showData()
+      this.listTask()
     },
     changeDone: function (id) {
       console.log(id)
       var db = firebase.database()
       db.ref('kanban/' + id + '/status').set('done')
       // this.seenCard = false
-      this.showData()
+      this.listTask()
     },
     collapsible: function () {
       if (this.seenCard) {
@@ -237,7 +220,7 @@ export default {
             var postsRef = database.ref('kanban')
             var usersRef = postsRef.child(id)
             usersRef.set({})
-            this.showData()
+            this.listTask()
             swal('Poof! Your task has been deleted!', {
               icon: 'success'
             })
